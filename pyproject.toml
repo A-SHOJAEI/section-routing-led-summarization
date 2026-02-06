@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools==75.8.0", "wheel==0.43.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "section-routing-led-summarization"
+version = "0.1.0"
+description = "Section-routed long-document summarization with LED + routed LoRA adapters."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Research Autopilot Generated Project" }]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

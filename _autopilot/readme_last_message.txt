@@ -1,0 +1,1 @@
+`README.md` overwritten with a project-specific research README grounded in this repo’s implementation (`src/srls/*`, `Makefile`, `configs/*.yaml`) and the measured numbers from `artifacts/report.md` / `artifacts/results.json`, including the exact results table and the required UTC “Last updated” footer timestamp.

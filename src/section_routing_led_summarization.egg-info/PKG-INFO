@@ -1,0 +1,71 @@
+Metadata-Version: 2.2
+Name: section-routing-led-summarization
+Version: 0.1.0
+Summary: Section-routed long-document summarization with LED + routed LoRA adapters.
+Author: Research Autopilot Generated Project
+License: MIT
+Requires-Python: <3.13,>=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Section-Routed Long-Document Summarization (LED + Routed LoRA)
+
+This repository implements the project described in `_autopilot/project_plan.json`:
+
+- Dataset: `armanc/scientific_papers` (`arxiv` subset) via Hugging Face Datasets.
+- Model: Longformer Encoder-Decoder (LED) for summarization, trained with parameter-efficient LoRA adapters.
+- Main idea: insert section-role markers (e.g. `<sec:intro>`) and route LoRA adapters by section role during encoding.
+- Outputs:
+  - `outputs/<run>/eval/results.json` (machine-readable)
+  - `report.md` (human-readable summary across runs)
+
+## Runs Implemented (Per Plan)
+
+Baseline (as described in the plan):
+- **No section tokens** and **single shared LoRA** adapter (no routing).
+
+Ablation (exactly as described in the plan):
+- **No routing**: keep section tokens, but use a **single shared LoRA** adapter for all tokens/sections.
+
+Main model:
+- Section tokens + **routed LoRA** (one LoRA expert per section role), with an optional auxiliary section-role classification loss.
+
+## Quickstart
+
+`make all` runs an end-to-end smoke configuration (`configs/smoke.yaml`) that:
+- uses dataset streaming + small capped splits (does not download the full ~4.5GB dataset),
+- trains only a few steps for each run,
+- evaluates on a small test subset.
+
+```bash
+make all
+```
+
+Key artifacts:
+- Processed data: `data/processed/<name>/` (+ `checksums.json`)
+- Checkpoints + metrics: `outputs/<run>/`
+- Results JSON: `outputs/<run>/eval/results.json`
+- Human report: `report.md`
+
+## Full Experiments
+
+Use `configs/experiment.yaml` (non-streaming by default) and adjust token lengths / steps to fit GPU memory.
+
+```bash
+make all CONFIG=configs/experiment.yaml
+```
+
+## Notes On Reproducibility
+
+Training sets:
+- Seeds for Python/NumPy/PyTorch
+- Optional deterministic settings (can reduce performance; see config)
+
+Evaluation exports the resolved config and environment info alongside metrics.
+
+## License
+
+Code: MIT (see `LICENSE`).
+
+Data/model licensing: upstream-dependent. The arXiv-derived dataset has mixed/unclear per-document licensing; treat redistribution carefully.
+

@@ -1,0 +1,65 @@
+{
+  "repo_name": "section-routing-led-summarization",
+  "title": "Section-Routed Long-Document Summarization of arXiv Papers (LED + LoRA) With Discourse Supervision",
+  "one_liner": "Train a long-context abstractive summarizer that routes lightweight adapters by paper section (Intro/Methods/Results/Conclusion) and test whether discourse-aware routing improves ROUGE and factual consistency at fixed compute.",
+  "research_question": "For long scientific documents, does (1) explicitly encoding section structure and (2) routing parameter-efficient adapters by section role improve abstractive summarization quality and factual consistency compared to standard long-document fine-tuning under the same token budget and training time?",
+  "dataset": {
+    "name": "armanc/scientific_papers (arxiv subset)",
+    "urls": [
+      "https://huggingface.co/datasets/armanc/scientific_papers",
+      "https://arxiv.org/abs/1804.05685"
+    ],
+    "license": "unknown/mixed (derived from arXiv and PubMed OpenAccess; per-document licensing may vary)",
+    "approx_size_gb": 4.5,
+    "ingestion_notes": "Use Hugging Face Datasets to download without credentials: load_dataset('armanc/scientific_papers', 'arxiv'). Use the provided train/validation/test splits. Parse `section_names` into coarse section roles via robust regex + normalization (e.g., introduction/method/results/discussion/conclusion/other). Insert special tokens like <sec:intro> before each section\u2019s text; optionally chunk very long sections to fit a fixed max input length (e.g., 4096 or 8192 tokens). Cache tokenized shards to disk to avoid repeated preprocessing."
+  },
+  "method": {
+    "model": "Longformer Encoder-Decoder (LED) in PyTorch (e.g., 'allenai/led-base-16384') fine-tuned for summarization with LoRA adapters; add section-role embeddings and route LoRA adapter weights by section role during encoding (shared decoder). Optional auxiliary head for section-role classification over pooled paragraph/section representations (multi-task).",
+    "baseline": "Standard LED summarization fine-tuning with identical max input length and training tokens, using (a) no section tokens and (b) a single shared LoRA (or full fine-tune) without routing; simple truncation or sliding-window concatenation for long inputs.",
+    "ablations": [
+      "No routing: section tokens kept but a single shared LoRA adapter for all tokens/sections.",
+      "No section structure: routed LoRA enabled but section tokens/roles removed (routing collapses to one adapter).",
+      "No auxiliary discourse loss: routed LoRA + section tokens, but remove the section-role classification objective (pure generation loss)."
+    ],
+    "metrics": [
+      "ROUGE-1/2/L (test split)",
+      "BERTScore (test split)",
+      "Factual consistency proxy on test split (SummaC-style entailment/contradiction scoring or equivalent NLI-based summary-vs-source score)",
+      "Efficiency: tokens/sec, peak VRAM, and wall-clock hours per run"
+    ]
+  },
+  "compute": {
+    "gpus": 2,
+    "expected_hours": 16
+  },
+  "risks": [
+    "Long-sequence training is memory- and throughput-heavy; 24GB VRAM may require small per-GPU batch sizes, gradient checkpointing, and/or shorter max input length.",
+    "Dataset license is not clearly specified at the dataset-card level; downstream use should treat content licensing as mixed and verify constraints for any redistribution.",
+    "Heuristic section-role mapping from `section_names` can be noisy; benefits may depend on mapping quality and token budget.",
+    "Automatic factuality metrics for summarization can be brittle; interpret changes cautiously and pair with targeted error analysis on a small hand-audited subset."
+  ],
+  "execution_steps": [
+    "Create env and install deps: pytorch (CUDA), transformers, datasets, accelerate, peft, evaluate, rouge_score, bert_score, and an NLI model/package for SummaC-like scoring.",
+    "Download + preprocess: load arxiv subset; build section-role labels; write a cached tokenized dataset with fixed max input length and consistent truncation/chunking policy.",
+    "Run baseline training (shared adapter or standard fine-tune) with fixed training-token budget; log throughput and checkpoints.",
+    "Run main model training (section tokens + routed LoRA; optionally + auxiliary section-role loss).",
+    "Run at least one ablation (recommended: keep section tokens but disable routing) under the same training-token budget.",
+    "Evaluate all runs on the official test split with ROUGE, BERTScore, and NLI-based factuality proxy; export a single JSON report with confidence intervals via bootstrap over documents.",
+    "Perform a short, structured error analysis on ~50 randomly sampled test papers: hallucination types, section coverage, and length/faithfulness tradeoffs."
+  ],
+  "generated_at_utc": "2026-02-06 18:46:41 UTC",
+  "hardware": {
+    "cpu_cores": 24,
+    "cpu_threads": 48,
+    "ram_gb": 251.59,
+    "gpu_count": 2,
+    "gpu_names": [
+      "NVIDIA GeForce RTX 3090",
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "gpu_vram_gb": [
+      24.0,
+      24.0
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+project:
+  seed: 7
+  deterministic: false
+
+data:
+  dataset_name: armanc/scientific_papers
+  dataset_config: arxiv
+  streaming: false
+  trust_remote_code: true
+  max_train_examples: null
+  max_valid_examples: null
+  max_test_examples: null
+  cache_dir: data/hf_cache
+  processed_dir: data/processed/experiment
+  max_input_tokens: 4096
+  max_target_tokens: 256
+
+model:
+  base_model_name: allenai/led-base-16384
+  section_roles: ["intro", "methods", "results", "discussion", "conclusion", "other"]
+  lora_rank: 8
+  lora_alpha: 16
+  lora_dropout: 0.05
+  target_modules: ["q_proj", "v_proj"]
+  aux_loss_weight: 0.1
+
+train:
+  output_dir: outputs
+  learning_rate: 2.0e-4
+  weight_decay: 0.0
+  warmup_steps: 500
+  max_steps: 15000
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8
+  eval_every_steps: 1000
+  save_every_steps: 1000
+  log_every_steps: 50
+  grad_checkpointing: true
+  mixed_precision: "fp16"
+
+eval:
+  max_generate_tokens: 256
+  num_beams: 4
+  bertscore_model: roberta-large
+  nli_model: typeform/distilbert-base-uncased-mnli
+  max_source_chars_for_nli: 12000
+  bootstrap_samples: 1000
