@@ -1,0 +1,56 @@
+{
+  "config_path": "configs/smoke.yaml",
+  "environment": {
+    "cuda_available": true,
+    "cuda_device_count": 2,
+    "cuda_name_0": "NVIDIA GeForce RTX 3090",
+    "platform": "Linux-6.17.0-14-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch": "2.10.0+cu126"
+  },
+  "generation": {
+    "max_new_tokens": 128,
+    "num_beams": 2,
+    "wall_time_sec": 16.02587342262268
+  },
+  "metrics": {
+    "bertscore_f1": {
+      "ci95": [
+        0.8428485173111161,
+        0.8632020105918249
+      ],
+      "mean": 0.8548735330502192
+    },
+    "nli_entail_minus_contra": {
+      "ci95": [
+        0.5728810104338966,
+        0.899091154289393
+      ],
+      "mean": 0.7404432119850147
+    },
+    "rouge1_f": {
+      "ci95": [
+        0.19280266096494186,
+        0.2682817802473532
+      ],
+      "mean": 0.23248543953582193
+    },
+    "rouge2_f": {
+      "ci95": [
+        0.03464721745664669,
+        0.062212285708912865
+      ],
+      "mean": 0.049568559019630705
+    },
+    "rougeL_f": {
+      "ci95": [
+        0.12961081288805076,
+        0.16793456021202954
+      ],
+      "mean": 0.1505135223218489
+    }
+  },
+  "num_examples": 24,
+  "run_name": "main_routed_lora_section_tokens_aux_loss",
+  "run_type": "main"
+}

@@ -5,8 +5,8 @@ __pycache__/
 
 data/hf_cache/
 data/processed/
-outputs/
-report.md
+# Keep eval/report artifacts under version control; ignore large checkpoints.
+outputs/**/model/
+outputs/**/model/*.pt
 
 .DS_Store
-

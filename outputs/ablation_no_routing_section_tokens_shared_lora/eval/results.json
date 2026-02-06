@@ -1,0 +1,56 @@
+{
+  "config_path": "configs/smoke.yaml",
+  "environment": {
+    "cuda_available": true,
+    "cuda_device_count": 2,
+    "cuda_name_0": "NVIDIA GeForce RTX 3090",
+    "platform": "Linux-6.17.0-14-generic-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "torch": "2.10.0+cu126"
+  },
+  "generation": {
+    "max_new_tokens": 128,
+    "num_beams": 2,
+    "wall_time_sec": 15.874171257019043
+  },
+  "metrics": {
+    "bertscore_f1": {
+      "ci95": [
+        0.8481717710693677,
+        0.8645915965239207
+      ],
+      "mean": 0.8564819743235906
+    },
+    "nli_entail_minus_contra": {
+      "ci95": [
+        0.5217466004851303,
+        0.8793120756949065
+      ],
+      "mean": 0.6991272423135039
+    },
+    "rouge1_f": {
+      "ci95": [
+        0.20883255743720094,
+        0.28048706287032776
+      ],
+      "mean": 0.24473240738288862
+    },
+    "rouge2_f": {
+      "ci95": [
+        0.03830448599250362,
+        0.061406583572405124
+      ],
+      "mean": 0.050822400216172924
+    },
+    "rougeL_f": {
+      "ci95": [
+        0.1386342114918959,
+        0.1702702810219017
+      ],
+      "mean": 0.15449075993062306
+    }
+  },
+  "num_examples": 24,
+  "run_name": "ablation_no_routing_section_tokens_shared_lora",
+  "run_type": "ablation_no_routing"
+}

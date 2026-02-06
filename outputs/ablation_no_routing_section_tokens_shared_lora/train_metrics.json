@@ -1,0 +1,33 @@
+{
+  "cuda": {
+    "device_count": 2,
+    "max_memory_allocated_bytes": 946076160
+  },
+  "deterministic": false,
+  "mixed_precision": "fp16",
+  "run_name": "ablation_no_routing_section_tokens_shared_lora",
+  "run_type": "ablation_no_routing",
+  "seed": 7,
+  "spec": {
+    "aux_loss_weight": 0.1,
+    "base_model_name": "allenai/led-base-16384",
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "lora_rank": 8,
+    "roles": [
+      "intro",
+      "methods",
+      "results",
+      "discussion",
+      "conclusion",
+      "other"
+    ],
+    "routed": false,
+    "target_modules": [
+      "q_proj",
+      "v_proj"
+    ]
+  },
+  "steps": 6,
+  "wall_time_sec": 2.547396183013916
+}
